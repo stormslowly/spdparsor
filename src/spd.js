@@ -74,28 +74,47 @@
 var spd = (function(){
 var parser = {trace: function trace() { },
 yy: {},
-symbols_: {"error":2,"expressions":3,"declare":4,"EOF":5,"PROCEDURE":6,"variable":7,"LBRACE":8,"RBRACE":9,"SARROW":10,"COMMA":11,"DARROW":12,"SEMICOLON":13,"$accept":0,"$end":1},
-terminals_: {2:"error",5:"EOF",6:"PROCEDURE",7:"variable",8:"LBRACE",9:"RBRACE",10:"SARROW",11:"COMMA",12:"DARROW",13:"SEMICOLON"},
-productions_: [0,[3,2],[4,9]],
+symbols_: {"error":2,"expressions":3,"declare":4,"EOF":5,"parameters":6,"in":7,"variable":8,"out":9,"COMMA":10,"PROCEDURE":11,"LBRACE":12,"RBRACE":13,"SARROW":14,"DARROW":15,"SEMICOLON":16,"$accept":0,"$end":1},
+terminals_: {2:"error",5:"EOF",7:"in",8:"variable",9:"out",10:"COMMA",11:"PROCEDURE",12:"LBRACE",13:"RBRACE",14:"SARROW",15:"DARROW",16:"SEMICOLON"},
+productions_: [0,[3,2],[6,3],[6,3],[6,5],[6,5],[4,9],[4,10]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
 var $0 = $$.length - 1;
 switch (yystate) {
 case 1:  
-            console.log("expressions==",$$[$0-1]); 
+            /* console.log("expressions==",$$[$0-1]); */
             return $$[$0-1];
         
 break;
-case 2:
-      	console.log($$[$0-7]);
+case 2: this.$ = [ {dir:'in',name:$$[$0-1], type: $$[$0]}] 
+break;
+case 3: this.$ = [ {dir:'out',name:$$[$0-1], type: $$[$0]}] 
+break;
+case 4:
+			$$[$0-4].push( {dir:'in',name:$$[$0-1], type: $$[$0]} );
+			this.$ = $$[$0-4].slice();
+		
+break;
+case 5: 
+			$$[$0-4].push( {dir:'out',name:$$[$0-1], type: $$[$0]} );
+			this.$ = $$[$0-4].slice();
+		
+break;
+case 6:
+      	/* console.log($$[$0-7]); */
       	this.$ = {name: $$[$0-7]};
+      
+break;
+case 7:
+      	/* console.log($$[$0-8],$$[$0-6]); */
+      	this.$ = {name: $$[$0-8],parameters:$$[$0-6]};
       
 break;
 }
 },
-table: [{3:1,4:2,6:[1,3]},{1:[3]},{5:[1,4]},{7:[1,5]},{1:[2,1]},{8:[1,6]},{9:[1,7]},{10:[1,8]},{11:[1,9]},{12:[1,10]},{7:[1,11]},{13:[1,12]},{5:[2,2]}],
-defaultActions: {4:[2,1],12:[2,2]},
+table: [{3:1,4:2,11:[1,3]},{1:[3]},{5:[1,4]},{8:[1,5]},{1:[2,1]},{12:[1,6]},{6:8,7:[1,9],9:[1,10],13:[1,7]},{14:[1,11]},{10:[1,13],13:[1,12]},{8:[1,14]},{8:[1,15]},{10:[1,16]},{14:[1,17]},{7:[1,18],9:[1,19]},{8:[1,20]},{8:[1,21]},{15:[1,22]},{10:[1,23]},{8:[1,24]},{8:[1,25]},{10:[2,2],13:[2,2]},{10:[2,3],13:[2,3]},{8:[1,26]},{15:[1,27]},{8:[1,28]},{8:[1,29]},{16:[1,30]},{8:[1,31]},{10:[2,4],13:[2,4]},{10:[2,5],13:[2,5]},{5:[2,6]},{16:[1,32]},{5:[2,7]}],
+defaultActions: {4:[2,1],30:[2,6],32:[2,7]},
 parseError: function parseError(str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -567,28 +586,32 @@ case 1:/* skip the service  */
 break;
 case 2:/* skip the sync     */
 break;
-case 3:return 6;
+case 3:return 11;
 break;
-case 4:return 11;
+case 4:return 10;
 break;
-case 5:return 8;
+case 5:return 12;
 break;
-case 6:return 9;
+case 6:return 13;
 break;
-case 7:return 10;
+case 7:return 14;
 break;
-case 8:return 12;
+case 8:return 15;
 break;
-case 9:return 5;
+case 9:return 7;
 break;
-case 10:return 7;
+case 10:return 9;
 break;
-case 11:return 13
+case 11:return 5;
+break;
+case 12:return 8;
+break;
+case 13:return 16
 break;
 }
 },
-rules: [/^(?:\s+)/,/^(?:SERVICES\b)/,/^(?:SYNC\b)/,/^(?:PROCEDURE\b)/,/^(?:,)/,/^(?:\()/,/^(?:\))/,/^(?:->)/,/^(?:=>)/,/^(?:$)/,/^(?:[a-zA-Z_][A-Za-z0-9_]*)/,/^(?:;)/],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11],"inclusive":true}}
+rules: [/^(?:\s+)/,/^(?:SERVICES\b)/,/^(?:SYNC\b)/,/^(?:PROCEDURE\b)/,/^(?:,)/,/^(?:\()/,/^(?:\))/,/^(?:->)/,/^(?:=>)/,/^(?:IN\b)/,/^(?:OUT\b)/,/^(?:$)/,/^(?:[a-zA-Z_][A-Za-z0-9_]*)/,/^(?:;)/],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13],"inclusive":true}}
 };
 return lexer;
 })();
