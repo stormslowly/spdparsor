@@ -1,29 +1,51 @@
-
+"use strict";
 var http = require("http");
+var fs   = require("fs");
+var cheer= require("cheerio");
+var BufferHelper = require('bufferhelper');
+var iconv = require('iconv-lite');
 
-function download(url,cb){
-  
-  var html = "";
-  http.get(url, function dcb(res){
-    
-    
-    res.on("data",function(data){
-      html = html + data;
-    });
+var exec = require('child_process').exec;
 
-    res.on("end",function(){
-       cb(null, html);
-    });
 
-  }).on('error',function(err){
-    cb(err);
+
+
+var taskFileContent = fs.readFileSync("../test/uniq.house.txt","utf-8");
+
+var tasks = taskFileContent.split("\n");
+
+var task = tasks[0];
+
+function assembleCMD(task){
+  var url = task.split(" ")[0];
+  var name = task.split(" ")[1];
+
+  var cmd = 'curl  --proxy http://10.144.1.10:8080 ' + url +
+            ' -H "Accept-Encoding: gzip" '  + ' |  gunzip > ' + name +'.html';
+  return cmd;
+}
+
+function handleTask( task ){
+
+
+  var child = exec( assembleCMD(task),
+      function (error, stdout, stderr) {
+      if (error !== null) {
+        console.log('exec error: ' + error);
+      }
+      console.log("done",task);
   });
 
 }
 
 
 
-download("http://www.baidu.com",function(e,d){
-  console.log(e,d);
 
-})
+// handleTask(task);
+
+tasks.forEach(function(t,i){
+  // console.log(i,t);
+  handleTask(t);
+});
+
+// console.log(tasks);
