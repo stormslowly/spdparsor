@@ -50,3 +50,5 @@ describe 'spd file pares',->
 		expect(ps).to.deep.equal([{name:'p1'},{name:'p2'},
 			{name:'p3',parameters:[{dir:'in',name:'input1',type:'type1'}]}])
 
+	it 'parse the procedure with comment'
+
