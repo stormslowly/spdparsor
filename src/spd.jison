@@ -34,12 +34,11 @@ SYNC      /* skip the sync     */
 %% /* language grammar */
 
 expressions
-    : declare EOF
-        {  
-            /* console.log("expressions==",$1); */
-            return $1;
-        }
 
+	: declare EOF
+		{
+            return $1;
+		}
     ;
 
 parameters
@@ -47,29 +46,35 @@ parameters
 	    { $$ = [ {dir:'in',name:$2, type: $3}] }
 	| out variable variable
 		{ $$ = [ {dir:'out',name:$2, type: $3}] }
-	| parameters COMMA in variable variable
+	| parameters COMMA parameters
 		{
-			$1.push( {dir:'in',name:$4, type: $5} );
+			for(var i = 0;i<$3.length; i+=1){
+				$1.push($3[i]);
+			}
 			$$ = $1.slice();
 		}
-	| parameters COMMA out variable variable
-		{ 
-			$1.push( {dir:'out',name:$4, type: $5} );
-			$$ = $1.slice();
-		}
+
 	;
 
 declare
     : PROCEDURE variable LBRACE RBRACE SARROW COMMA DARROW variable SEMICOLON
       {
       	/* console.log($2); */
-      	$$ = {name: $2};
+      	$$ = [{name: $2}];
       }
     | PROCEDURE variable LBRACE parameters RBRACE SARROW COMMA DARROW variable SEMICOLON
       {
       	/* console.log($2,$4); */
-      	$$ = {name: $2,parameters:$4};
+      	$$ = [{name: $2,parameters:$4}];
       }
+    | declare declare
+    	{
+    		for(var i = 0; i <$2.length;i+=1){
+    			$1.push($2[i])
+    		}
+    		$$ = $1.slice();
+    	}
+
     ;
 
 

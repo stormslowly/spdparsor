@@ -76,45 +76,48 @@ var parser = {trace: function trace() { },
 yy: {},
 symbols_: {"error":2,"expressions":3,"declare":4,"EOF":5,"parameters":6,"in":7,"variable":8,"out":9,"COMMA":10,"PROCEDURE":11,"LBRACE":12,"RBRACE":13,"SARROW":14,"DARROW":15,"SEMICOLON":16,"$accept":0,"$end":1},
 terminals_: {2:"error",5:"EOF",7:"in",8:"variable",9:"out",10:"COMMA",11:"PROCEDURE",12:"LBRACE",13:"RBRACE",14:"SARROW",15:"DARROW",16:"SEMICOLON"},
-productions_: [0,[3,2],[6,3],[6,3],[6,5],[6,5],[4,9],[4,10]],
+productions_: [0,[3,2],[6,3],[6,3],[6,3],[4,9],[4,10],[4,2]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
 var $0 = $$.length - 1;
 switch (yystate) {
-case 1:  
-            /* console.log("expressions==",$$[$0-1]); */
+case 1:
             return $$[$0-1];
-        
+		
 break;
 case 2: this.$ = [ {dir:'in',name:$$[$0-1], type: $$[$0]}] 
 break;
 case 3: this.$ = [ {dir:'out',name:$$[$0-1], type: $$[$0]}] 
 break;
 case 4:
-			$$[$0-4].push( {dir:'in',name:$$[$0-1], type: $$[$0]} );
-			this.$ = $$[$0-4].slice();
+			for(var i = 0;i<$$[$0].length; i+=1){
+				$$[$0-2].push($$[$0][i]);
+			}
+			this.$ = $$[$0-2].slice();
 		
 break;
-case 5: 
-			$$[$0-4].push( {dir:'out',name:$$[$0-1], type: $$[$0]} );
-			this.$ = $$[$0-4].slice();
-		
+case 5:
+      	/* console.log($$[$0-7]); */
+      	this.$ = [{name: $$[$0-7]}];
+      
 break;
 case 6:
-      	/* console.log($$[$0-7]); */
-      	this.$ = {name: $$[$0-7]};
+      	/* console.log($$[$0-8],$$[$0-6]); */
+      	this.$ = [{name: $$[$0-8],parameters:$$[$0-6]}];
       
 break;
 case 7:
-      	/* console.log($$[$0-8],$$[$0-6]); */
-      	this.$ = {name: $$[$0-8],parameters:$$[$0-6]};
-      
+    		for(var i = 0; i <$$[$0].length;i+=1){
+    			$$[$0-1].push($$[$0][i])
+    		}
+    		this.$ = $$[$0-1].slice();
+    	
 break;
 }
 },
-table: [{3:1,4:2,11:[1,3]},{1:[3]},{5:[1,4]},{8:[1,5]},{1:[2,1]},{12:[1,6]},{6:8,7:[1,9],9:[1,10],13:[1,7]},{14:[1,11]},{10:[1,13],13:[1,12]},{8:[1,14]},{8:[1,15]},{10:[1,16]},{14:[1,17]},{7:[1,18],9:[1,19]},{8:[1,20]},{8:[1,21]},{15:[1,22]},{10:[1,23]},{8:[1,24]},{8:[1,25]},{10:[2,2],13:[2,2]},{10:[2,3],13:[2,3]},{8:[1,26]},{15:[1,27]},{8:[1,28]},{8:[1,29]},{16:[1,30]},{8:[1,31]},{10:[2,4],13:[2,4]},{10:[2,5],13:[2,5]},{5:[2,6]},{16:[1,32]},{5:[2,7]}],
-defaultActions: {4:[2,1],30:[2,6],32:[2,7]},
+table: [{3:1,4:2,11:[1,3]},{1:[3]},{4:5,5:[1,4],11:[1,3]},{8:[1,6]},{1:[2,1]},{4:5,5:[2,7],11:[1,3]},{12:[1,7]},{6:9,7:[1,10],9:[1,11],13:[1,8]},{14:[1,12]},{10:[1,14],13:[1,13]},{8:[1,15]},{8:[1,16]},{10:[1,17]},{14:[1,18]},{6:19,7:[1,10],9:[1,11]},{8:[1,20]},{8:[1,21]},{15:[1,22]},{10:[1,23]},{10:[1,14],13:[2,4]},{10:[2,2],13:[2,2]},{10:[2,3],13:[2,3]},{8:[1,24]},{15:[1,25]},{16:[1,26]},{8:[1,27]},{5:[2,5],11:[2,5]},{16:[1,28]},{5:[2,6],11:[2,6]}],
+defaultActions: {4:[2,1]},
 parseError: function parseError(str, hash) {
     if (hash.recoverable) {
         this.trace(str);
