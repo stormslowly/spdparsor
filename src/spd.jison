@@ -20,6 +20,7 @@ SYNC      /* skip the sync     */
 "=>"              return 'DARROW';
 "IN"              return 'in';
 "OUT"             return 'out';
+FAR|NEAR          return 'dist';
 \/\*.*\*\/        /* skip comment */
 
 <<EOF>>                 return 'EOF';
@@ -58,12 +59,12 @@ parameters
 	;
 
 declare
-    : PROCEDURE variable LBRACE RBRACE SARROW COMMA DARROW variable SEMICOLON
+    : PROCEDURE variable LBRACE RBRACE SARROW COMMA dist DARROW SEMICOLON
       {
       	/* console.log($2); */
       	$$ = [{name: $2}];
       }
-    | PROCEDURE variable LBRACE parameters RBRACE SARROW COMMA DARROW variable SEMICOLON
+    | PROCEDURE variable LBRACE parameters RBRACE SARROW COMMA dist DARROW SEMICOLON
       {
       	/* console.log($2,$4); */
       	$$ = [{name: $2,parameters:$4}];
