@@ -52,3 +52,10 @@ describe 'spd file pares',->
 
 	it 'parse the procedure with comment'
 
+	it 'ignore slash start comment ', ->
+		p = spd.parse('/* comment 1
+			                comment 2
+			              */
+			            PROCEDURE P1()->,=> FAR;');
+
+

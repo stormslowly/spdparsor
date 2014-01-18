@@ -20,6 +20,7 @@ SYNC      /* skip the sync     */
 "=>"              return 'DARROW';
 "IN"              return 'in';
 "OUT"             return 'out';
+\/\*.*\*\/        /* skip comment */
 
 <<EOF>>                 return 'EOF';
 [a-zA-Z_][A-Za-z0-9_]*  return 'variable';
