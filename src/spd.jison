@@ -21,7 +21,9 @@ SYNC      /* skip the sync     */
 "IN"              return 'in';
 "OUT"             return 'out';
 FAR|NEAR          return 'dist';
+"COMMENT"         return 'comment';
 \/\*.*\*\/        /* skip comment */
+\'.*\'            return 'string';
 
 <<EOF>>                 return 'EOF';
 [a-zA-Z_][A-Za-z0-9_]*  return 'variable';
@@ -57,12 +59,23 @@ parameters
 		}
 
 	;
+strings
+    : string
+    | strings string
+    ;
+
+
 
 declare
     : PROCEDURE variable LBRACE RBRACE SARROW COMMA dist DARROW SEMICOLON
       {
       	/* console.log($2); */
       	$$ = [{name: $2}];
+      }
+    | PROCEDURE variable LBRACE RBRACE SARROW COMMA dist DARROW  comment string SEMICOLON
+      {
+        /* console.log($2); */
+        $$ = [{name: $2}];
       }
     | PROCEDURE variable LBRACE parameters RBRACE SARROW COMMA dist DARROW SEMICOLON
       {

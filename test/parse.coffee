@@ -49,12 +49,14 @@ describe 'spd file pares',->
 		expect(ps).to.deep.equal([{name:'p1'},{name:'p2'},
 			{name:'p3',parameters:[{dir:'in',name:'input1',type:'type1'}]}])
 
-	it 'parse the procedure with comment'
+	it 'parse the procedure with COMMENT statement',->
+		p = spd.parse "PROCEDURE PROCEDURENAME()->,FAR => COMMENT 'this is comment' ;"
+		expect(p).to.have.deep.equal([{'name':'PROCEDURENAME'}]);
 
 	it 'ignore slash start comment ', ->
 		p = spd.parse('/* comment 1
 			                comment 2
 			              */
 			            PROCEDURE P1()->,FAR => ;');
-
+		expect(p).to.deep.equal([{name:'P1'}]);
 
