@@ -41,7 +41,7 @@ describe 'spd file pares',->
 
 		expect([1,2,3]).to.deep.equal([1,2,3]);
 
-		ps = spd.parse "PROCEDURE p1()->,FAR =>  ; 
+		ps = spd.parse "PROCEDURE p1()->,FAR =>  ;
 		                 PROCEDURE p2()->, FAR => ;
 		                 PROCEDURE p3(IN input1 type1) ->, FAR => ;"
 
