@@ -64,15 +64,13 @@ strings
     | strings string
     ;
 
-
-
 declare
     : PROCEDURE variable LBRACE RBRACE SARROW COMMA dist DARROW SEMICOLON
       {
       	/* console.log($2); */
       	$$ = [{name: $2}];
       }
-    | PROCEDURE variable LBRACE RBRACE SARROW COMMA dist DARROW  comment string SEMICOLON
+    | PROCEDURE variable LBRACE RBRACE SARROW COMMA dist DARROW  comment strings SEMICOLON
       {
         /* console.log($2); */
         $$ = [{name: $2}];
