@@ -4,7 +4,7 @@
 
 
 
- %lex 
+ %lex
 
 %%
 
@@ -39,22 +39,25 @@ FAR|NEAR          return 'dist';
 
 expressions
 
-	: declare EOF
+	: declares EOF
 		{
             return $1;
 		}
     ;
 
+parameter
+  : in variable variable
+      { $$ = [ {dir:'in',name:$2, type: $3}] }
+  | out variable variable
+    { $$ = [ {dir:'out',name:$2, type: $3}] }
+  ;
+
 parameters
-	: in variable variable
-	    { $$ = [ {dir:'in',name:$2, type: $3}] }
-	| out variable variable
-		{ $$ = [ {dir:'out',name:$2, type: $3}] }
-	| parameters COMMA parameters
+	: parameter
+	    { $$ = [ $1[0] ] }
+	| parameters COMMA parameter
 		{
-			for(var i = 0;i<$3.length; i+=1){
-				$1.push($3[i]);
-			}
+			$1.push($3[0]);
 			$$ = $1.slice();
 		}
 
@@ -64,6 +67,19 @@ strings
     | strings string
     ;
 
+declares
+    : declare
+      {
+        $$ = $1.slice();
+      }
+    | declares declare
+      {
+
+        $1.push($2[0])
+
+        $$ = $1.slice();
+      }
+    ;
 declare
     : PROCEDURE variable LBRACE RBRACE SARROW COMMA dist DARROW SEMICOLON
       {
@@ -80,15 +96,6 @@ declare
       	/* console.log($2,$4); */
       	$$ = [{name: $2,parameters:$4}];
       }
-    | declare declare
-    	{
-    		for(var i = 0; i <$2.length;i+=1){
-    			$1.push($2[i])
-    		}
-    		$$ = $1.slice();
-    	}
-
     ;
-
 
 
