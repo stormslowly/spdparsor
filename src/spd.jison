@@ -1,10 +1,7 @@
 /** spd file parse jison
  *
  */
-
-
-
- %lex
+%lex
 
 %%
 
@@ -39,63 +36,61 @@ FAR|NEAR          return 'dist';
 
 expressions
 
-	: declares EOF
-		{
-            return $1;
-		}
+  : declares EOF
+    {
+      return $1;
+    }
     ;
 
 parameter
   : in variable variable
-      { $$ = [ {dir:'in',name:$2, type: $3}] }
+    { $$ = {dir:'in',name:$2, type: $3} }
   | out variable variable
-    { $$ = [ {dir:'out',name:$2, type: $3}] }
+    { $$ = {dir:'out',name:$2, type: $3} }
   ;
 
 parameters
-	: parameter
-	    { $$ = [ $1[0] ] }
-	| parameters COMMA parameter
-		{
-			$1.push($3[0]);
-			$$ = $1.slice();
-		}
+  : parameter
+      { $$ = [ $1 ] }
+  | parameters COMMA parameter
+    {
+      $1.push($3);
+      $$ = $1.slice();
+    }
+  ;
 
-	;
 strings
-    : string
-    | strings string
-    ;
+  : string
+  | strings string
+  ;
 
 declares
-    : declare
-      {
-        $$ = $1.slice();
-      }
-    | declares declare
-      {
+  : declare
+    {
+      $$ = [ $1 ];
+    }
+  | declares declare
+    {
 
-        $1.push($2[0])
+      $1.push($2)
 
-        $$ = $1.slice();
-      }
-    ;
+      $$ = $1.slice();
+    }
+  ;
+
 declare
-    : PROCEDURE variable LBRACE RBRACE SARROW COMMA dist DARROW SEMICOLON
-      {
-      	/* console.log($2); */
-      	$$ = [{name: $2}];
-      }
-    | PROCEDURE variable LBRACE RBRACE SARROW COMMA dist DARROW  comment strings SEMICOLON
-      {
-        /* console.log($2); */
-        $$ = [{name: $2}];
-      }
-    | PROCEDURE variable LBRACE parameters RBRACE SARROW COMMA dist DARROW SEMICOLON
-      {
-      	/* console.log($2,$4); */
-      	$$ = [{name: $2,parameters:$4}];
-      }
-    ;
+  : PROCEDURE variable LBRACE RBRACE SARROW COMMA dist DARROW SEMICOLON
+    {
+      $$ = {name: $2};
+    }
+  | PROCEDURE variable LBRACE RBRACE SARROW COMMA dist DARROW  comment strings SEMICOLON
+    {
+      $$ = {name: $2};
+    }
+  | PROCEDURE variable LBRACE parameters RBRACE SARROW COMMA dist DARROW SEMICOLON
+    {
+      $$ = {name: $2,parameters:$4};
+    }
+  ;
 
 
