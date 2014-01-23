@@ -91,6 +91,10 @@ declare
     {
       $$ = {name: $2,parameters:$4};
     }
+  | PROCEDURE variable LBRACE parameters RBRACE SARROW COMMA dist DARROW comment strings SEMICOLON
+    {
+      $$ = {name: $2,parameters:$4};
+    } 
   ;
 
 

@@ -5,10 +5,13 @@ expect = chai.expect;
 spd = require '../src/spd.js'
 
 describe 'spd file parsor',->
-	it 'can parse no parameter procedure', ->
+	it 'can parse no parameter procedure without comment', ->
 		p = spd.parse "PROCEDURE PROCEDURENAME()->,FAR => ;"
 		p = p[0];
 		expect(p).to.have.deep.property('name', 'PROCEDURENAME');
+
+	it 'can parse no parameter PROCEDURE with comment', ->
+		p = spd.parse " PROCEDURE p1()-> , FAR => COMMENT 'test comment' ;"
 
 	it 'can parse one parameter procedure', ->
 		p = spd.parse "PROCEDURE p2(IN input1 type1)->,FAR => ;"
@@ -49,7 +52,12 @@ describe 'spd file parsor',->
 		p = spd.parse "PROCEDURE PROCEDURENAME()->,FAR => COMMENT 'this is comment'
 		                                                          'this is comment2';"
 		expect(p).to.have.deep.equal([{'name':'PROCEDURENAME'}]);
-
+		
+		p = spd.parse "PROCEDURE PROCEDURENAME(IN input1 dword)->,FAR => COMMENT 'this is comment'
+		                                                          'this is comment2';"
+		expect(p).to.have.deep.equal([{name:'PROCEDURENAME',parameters:[ 
+			                            {dir:'in',name:'input1',type:'dword'} ]}]);
+	
 	it 'ignore slash star style comment ', ->
 		p = spd.parse('/* comment 1
 			                comment 2
