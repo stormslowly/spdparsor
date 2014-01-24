@@ -69,7 +69,7 @@ describe 'spd file parsor',->
                   PROCEDURE P1(/* test comment*/)->,FAR => ;');
     expect(p).to.deep.equal([{name:'P1',return:'',parameters:[]}]);
 
-  it 'can parse no PROCEDURE heading defination',->
+  it 'can parse no PROCEDURE leading defination',->
     procedures = spd.parse ('p1()->error_t,FAR=>;');
     expect(procedures).to.deep.equal([
       {name:'p1',
