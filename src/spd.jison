@@ -81,6 +81,11 @@ arg
     }
   ;
 
+procedureComment
+  : comment strings  SEMICOLON
+  | SEMICOLON
+  ;
+
 strings
   : strings string
   | string
@@ -99,21 +104,13 @@ declares
   ;
 
 declare
-  : PROCEDURE variable arg SARROW COMMA dist DARROW SEMICOLON
+  : PROCEDURE variable arg SARROW COMMA dist DARROW procedureComment
     {
       $$ = {name: $2,return:'',parameters:$3};
     }
-  | PROCEDURE variable arg SARROW COMMA dist DARROW  comment strings SEMICOLON
-    {
-      $$ = {name: $2,return:'',parameters:$3};
-    }
-  | PROCEDURE variable arg SARROW variable COMMA dist DARROW  comment strings SEMICOLON
+  | PROCEDURE variable arg SARROW variable COMMA dist DARROW procedureComment
     {
       $$ = {name: $2,return:$5,parameters:$3};
-    }
-  | PROCEDURE variable arg SARROW variable COMMA dist DARROW SEMICOLON
-    {
-      $$ = {name: $2,return:$7,parameters:$3};
     }
   ;
 
