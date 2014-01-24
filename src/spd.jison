@@ -23,7 +23,7 @@ SYNC|ASYNC        return 'serverType';
 "OUT"             return 'out';
 FAR|NEAR          return 'dist';
 "COMMENT"         return 'comment';
-\'.*\'            return 'string'; /* ('"'.*'"')|("'"."'") */
+\'[^\']*\'        return 'string';
 <<EOF>>                 return 'EOF';
 [a-zA-Z_][A-Za-z0-9_]*  return 'variable';
 ";"                     return 'SEMICOLON'
@@ -41,7 +41,6 @@ expressions
   :
   libdef declares endlibdef EOF
     {
-      console.log('=>',$2);
       return $2.slice();
     }
   | declares EOF
@@ -72,8 +71,8 @@ parameters
   ;
 
 strings
-  : string
-  | strings string
+  : strings string
+  | string
   ;
 
 declares
