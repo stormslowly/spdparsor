@@ -70,6 +70,17 @@ parameters
     }
   ;
 
+arg
+  : LBRACE parameters RBRACE
+    {
+      $$ = $2.slice();
+    }
+  | LBRACE RBRACE
+    {
+      $$ = [];
+    }
+  ;
+
 strings
   : strings string
   | string
@@ -88,37 +99,21 @@ declares
   ;
 
 declare
-  : PROCEDURE variable LBRACE RBRACE SARROW COMMA dist DARROW SEMICOLON
+  : PROCEDURE variable arg SARROW COMMA dist DARROW SEMICOLON
     {
-      $$ = {name: $2,return:''};
+      $$ = {name: $2,return:'',parameters:$3};
     }
-  | PROCEDURE variable LBRACE RBRACE SARROW COMMA dist DARROW  comment strings SEMICOLON
+  | PROCEDURE variable arg SARROW COMMA dist DARROW  comment strings SEMICOLON
     {
-      $$ = {name: $2,return:''};
+      $$ = {name: $2,return:'',parameters:$3};
     }
-  | PROCEDURE variable LBRACE parameters RBRACE SARROW COMMA dist DARROW SEMICOLON
+  | PROCEDURE variable arg SARROW variable COMMA dist DARROW  comment strings SEMICOLON
     {
-      $$ = {name: $2,parameters:$4,return:''};
+      $$ = {name: $2,return:$5,parameters:$3};
     }
-  | PROCEDURE variable LBRACE parameters RBRACE SARROW COMMA dist DARROW comment strings SEMICOLON
+  | PROCEDURE variable arg SARROW variable COMMA dist DARROW SEMICOLON
     {
-      $$ = {name: $2,parameters:$4,return:''};
-    }
-  | PROCEDURE variable LBRACE RBRACE SARROW variable COMMA dist DARROW SEMICOLON
-    {
-      $$ = {name: $2,return:$6};
-    }
-  | PROCEDURE variable LBRACE RBRACE SARROW variable COMMA dist DARROW  comment strings SEMICOLON
-    {
-      $$ = {name: $2,return:$6};
-    }
-  | PROCEDURE variable LBRACE parameters RBRACE SARROW variable COMMA dist DARROW SEMICOLON
-    {
-      $$ = {name: $2,parameters:$4,return:$7};
-    }
-  | PROCEDURE variable LBRACE parameters RBRACE SARROW variable COMMA dist DARROW comment strings SEMICOLON
-    {
-      $$ = {name: $2,parameters:$4,return:$7};
+      $$ = {name: $2,return:$7,parameters:$3};
     }
   ;
 

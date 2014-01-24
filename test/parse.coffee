@@ -44,13 +44,18 @@ describe 'spd file parsor',->
                      PROCEDURE p2()->, FAR => COMMENT '#comment it' 'comment2 ';
                      PROCEDURE p3(IN input1 type1) ->, FAR => COMMENT 'comment3';"
     expect(ps.length).to.equal(3);
-    expect(ps).to.deep.equal([{name:'p1',return:''},{name:'p2',return:''},
+    expect(ps).to.deep.equal([
+      {name:'p1',return:'',parameters:[]},
+      {name:'p2',return:'',parameters:[]},
       {name:'p3',return:'',parameters:[{dir:'in',name:'input1',type:'type1'}]}])
 
   it 'can parse the procedure with COMMENT statement',->
     p = spd.parse "PROCEDURE PROCEDURENAME()->,FAR => COMMENT 'this is comment'
                                                               'this is comment2';"
-    expect(p).to.have.deep.equal([{'name':'PROCEDURENAME',return:''}]);
+    expect(p).to.have.deep.equal([{
+      name:'PROCEDURENAME',
+      return:'',
+      parameters:[]}]);
 
     p = spd.parse "PROCEDURE PROCEDURENAME(IN input1 dword)->,FAR => COMMENT 'this is comment'
                                                               'this is comment2';"
@@ -62,4 +67,4 @@ describe 'spd file parsor',->
                       comment 2
                     */
                   PROCEDURE P1(/* test comment*/)->,FAR => ;');
-    expect(p).to.deep.equal([{name:'P1',return:''}]);
+    expect(p).to.deep.equal([{name:'P1',return:'',parameters:[]}]);
