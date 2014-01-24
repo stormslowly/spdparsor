@@ -81,7 +81,7 @@ arg
     }
   ;
 
-procedureComment
+statementComment
   : comment strings  SEMICOLON
   | SEMICOLON
   ;
@@ -116,11 +116,11 @@ declares
   ;
 
 declare
-  : procedureName arg SARROW COMMA dist DARROW procedureComment
+  : procedureName arg SARROW COMMA dist DARROW statementComment
     {
       $$ = {name: $1,return:'',parameters:$2};
     }
-  | procedureName arg SARROW variable COMMA dist DARROW procedureComment
+  | procedureName arg SARROW variable COMMA dist DARROW statementComment
     {
       $$ = {name: $1,return:$4,parameters:$2};
     }
@@ -130,5 +130,5 @@ libdef
   : startService serverType lib variable SEMICOLON
   ;
 endlibdef
-  : endLib variable SEMICOLON
+  : endLib variable statementComment
   ;

@@ -76,4 +76,11 @@ describe 'spd file parsor',->
       return:'error_t',
       parameters:[]}]);
 
-
+  it 'should support apparagx.spd'
+  it 'should support CONSTANT define'
+  it 'should support IN can ommitted in cdprtagx.spd'
+  it 'should support typedefine in clugengx.spd'
+  it 'should support FAR ommit => in ethlibgx'
+  it 'should support FAR <= in fixlibgx'
+  it 'should support NO libary libname in idwlibgx'
+  it 'should support ... in syklib'
