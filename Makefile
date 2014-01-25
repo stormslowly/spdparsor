@@ -1,7 +1,7 @@
 
 
 ECHO = @echo
-RM   = @rm -f
+RM   = rm -f
 
 all: src/spd.js
 	@mocha
