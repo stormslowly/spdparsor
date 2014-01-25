@@ -78,7 +78,13 @@ describe 'spd file parsor',->
 
   it 'should support apparagx.spd'
   it 'should support CONSTANT define'
-  it 'should support IN can ommitted in cdprtagx.spd'
+  it 'should support IN can ommitted in cdprtagx.spd',->
+    procedures = spd.parse('PROCEDURE p(para error_t)->ret,FAR=>;');
+    expect(procedures).to.deep.equal([
+      {
+        name:'p',return:'ret',
+        parameters:[{dir:'in',name:'para',type:'error_t'}]
+        }]);
   it 'should support typedefine in clugengx.spd'
   it 'should support FAR ommit => in ethlibgx'
   it 'should support FAR <= in fixlibgx',->

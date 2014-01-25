@@ -52,6 +52,8 @@ expressions
 parameter
   : in variable variable
     { $$ = {dir:'in',name:$2, type: $3} }
+  | variable variable
+    { $$ = {dir:'in',name:$1, type: $2} }
   | out variable variable
     { $$ = {dir:'out',name:$2, type: $3} }
   | inout dist variable variable
@@ -115,12 +117,16 @@ declares
     }
   ;
 
+distDefine
+  : dist DARROW
+  ;
+
 declare
-  : procedureName arg SARROW COMMA dist DARROW statementComment
+  : procedureName arg SARROW COMMA distDefine statementComment
     {
       $$ = {name: $1,return:'',parameters:$2};
     }
-  | procedureName arg SARROW variable COMMA dist DARROW statementComment
+  | procedureName arg SARROW variable COMMA distDefine statementComment
     {
       $$ = {name: $1,return:$4,parameters:$2};
     }
