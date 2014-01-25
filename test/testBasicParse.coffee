@@ -81,6 +81,13 @@ describe 'spd file parsor',->
   it 'should support IN can ommitted in cdprtagx.spd'
   it 'should support typedefine in clugengx.spd'
   it 'should support FAR ommit => in ethlibgx'
-  it 'should support FAR <= in fixlibgx'
+  it 'should support FAR <= in fixlibgx',->
+    procedures = spd.parse(' p1(IN para1 dword)->,FAR <=;');
+    expect(procedures).to.deep.equal([
+      {
+        name:'p1',return:'',
+        parameters:[{dir:'in',name:'para1',type:'dword'}]
+      }]);
+
   it 'should support NO libary libname in idwlibgx'
   it 'should support ... in syklib'

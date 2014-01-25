@@ -17,7 +17,7 @@ SYNC|ASYNC        return 'serverType';
 "("               return 'LBRACE';
 ")"               return 'RBRACE';
 "->"              return 'SARROW';
-"=>"              return 'DARROW';
+"=>"|"<="         return 'DARROW';
 "IN/OUT"          return 'inout';
 "IN"              return 'in';
 "OUT"             return 'out';
