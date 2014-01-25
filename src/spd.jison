@@ -38,8 +38,11 @@ FAR|NEAR          return 'dist';
 %% /* language grammar */
 
 expressions
-  :
-  libdef declares endlibdef EOF
+  :libdef declares endlibdef EOF
+    {
+      return $2.slice();
+    }
+  | libdef declares EOF
     {
       return $2.slice();
     }
@@ -139,6 +142,7 @@ declare
 
 libdef
   : startService serverType lib variable SEMICOLON
+  | startService serverType
   ;
 endlibdef
   : endLib variable statementComment

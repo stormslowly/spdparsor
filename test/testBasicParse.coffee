@@ -101,6 +101,17 @@ describe 'spd file parsor',->
         parameters:[{dir:'in',name:'para1',type:'dword'}]
       }]);
 
-  it 'should support NO libary libname in idwlibgx'
+  it 'should support NO libary libname in idwlibgx',->
+    procedures = spd.parse("
+      SERVICES SYNC
+      get_sth (
+        IN      io_unit     unit_it_t,
+        IN      comp        unit_it_t,
+        IN/OUT  curr_state  unit_state_t,
+        IN/OUT  orig_state  unit_state_t,
+        IN/OUT  state_info  io_unit_info_t
+      ) -> error_t  /* success of operation */
+      , FAR =>;");
+
   it 'should support ... in syklib',->
     procedures = spd.parse(' PROCEDURE p1(IN format string_t,...)->,FAR =>;');
