@@ -27,7 +27,7 @@ FAR|NEAR          return 'dist';
 <<EOF>>                 return 'EOF';
 [a-zA-Z_][A-Za-z0-9_]*  return 'variable';
 ";"                     return 'SEMICOLON'
-
+"..."                   return 'dot3';
 /lex
 
 %right declares
@@ -72,6 +72,10 @@ parameters
 
 arg
   : LBRACE parameters RBRACE
+    {
+      $$ = $2.slice();
+    }
+  | LBRACE parameters COMMA dot3 RBRACE
     {
       $$ = $2.slice();
     }

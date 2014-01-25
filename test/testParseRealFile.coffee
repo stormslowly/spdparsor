@@ -12,7 +12,6 @@ describe 'spd parese real spd file',->
     path = 'test/sdl_form/'
     spdFileList = fs.readdirSync path
 
-    expect(spdFileList).to.have.length.above(5)
     spdFileList.forEach (file)->
       fullPath =  path + file
       parseFile fullPath
