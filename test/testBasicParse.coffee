@@ -96,4 +96,5 @@ describe 'spd file parsor',->
       }]);
 
   it 'should support NO libary libname in idwlibgx'
-  it 'should support ... in syklib'
+  it 'should support ... in syklib',->
+    procedures = spd.parse(' PROCEDURE p1(IN format string_t,...)->,FAR =>;');
