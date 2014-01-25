@@ -123,6 +123,7 @@ declares
 
 distDefine
   : dist DARROW
+  | dist
   ;
 
 declare

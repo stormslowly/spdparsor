@@ -86,7 +86,13 @@ describe 'spd file parsor',->
         parameters:[{dir:'in',name:'para',type:'error_t'}]
         }]);
   it 'should support typedefine in clugengx.spd'
-  it 'should support FAR ommit => in ethlibgx'
+  it 'should support FAR ommit => in ethlibgx',->
+    procedures = spd.parse(" pro () -> error_t, FAR
+                            COMMENT '#E: Initialize lib. ' ;")
+    expect(procedures).to.deep.equal([{
+      name:'pro',return:'error_t',
+      parameters:[]
+      }])
   it 'should support FAR <= in fixlibgx',->
     procedures = spd.parse(' p1(IN para1 dword)->,FAR <=;');
     expect(procedures).to.deep.equal([
