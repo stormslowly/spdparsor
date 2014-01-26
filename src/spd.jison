@@ -22,6 +22,7 @@ SYNC|ASYNC        return 'serverType';
 "IN"              return 'in';
 "OUT"             return 'out';
 FAR|NEAR          return 'dist';
+VIEWED            return 'viewed';
 "COMMENT"         return 'comment';
 \'[^\']*\'        return 'string';
 <<EOF>>                 return 'EOF';
@@ -129,6 +130,24 @@ distDefine
   | dist
   ;
 
+itemDeclares
+  : itemDeclares COMMA itemDeclare
+    {
+      $$.push($3);
+    }
+  | itemDeclare
+    {
+      $$ = [$1];
+    }
+  ;
+
+itemDeclare
+  : variable variable
+    {
+      $$ = {name:$1,return:$2};
+    }
+  ;
+
 declare
   : procedureName arg SARROW COMMA distDefine statementComment
     {
@@ -137,6 +156,10 @@ declare
   | procedureName arg SARROW variable COMMA distDefine statementComment
     {
       $$ = {name: $1,return:$4,parameters:$2};
+    }
+  | viewed dist itemDeclares statementComment
+    {
+      $$ = $3.slice();
     }
   ;
 
