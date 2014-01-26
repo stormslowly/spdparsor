@@ -3,8 +3,12 @@
 ECHO = @echo
 RM   = rm -f
 
-all: src/spd.js
+all: test
+
+test: lib
 	@mocha
+
+lib: src/spd.js
 
 clean:
 	$(RM) src/spd.js
