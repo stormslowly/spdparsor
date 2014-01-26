@@ -95,10 +95,9 @@ describe 'spd file parsor',->
                     wdisk_read_after_write      boolean;");
 
   it 'should support CONSTANT define',->
-    spd.parse("
-      CONSTANT
-        asylib_defined = 1;
-");
+    p = spd.parse("CONSTANT
+        asylib_defined = test,
+        nextlib       = 3433;");
 
   it 'should support IN can ommitted in cdprtagx.spd',->
     procedures = spd.parse('PROCEDURE p(para error_t)->ret,FAR=>;');

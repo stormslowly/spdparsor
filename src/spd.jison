@@ -11,6 +11,7 @@
 SYNC|ASYNC        return 'serverType';
 
 "PROCEDURE"       return 'PROCEDURE';
+"CONSTANT"        return 'constant';
 "LIBRARY"         return 'lib';
 "ENDLIBRARY"      return 'endLib';
 ","               return 'COMMA';
@@ -18,6 +19,7 @@ SYNC|ASYNC        return 'serverType';
 ")"               return 'RBRACE';
 "->"              return 'SARROW';
 "=>"|"<="         return 'DARROW';
+"="               return 'EQUAL';
 "IN/OUT"          return 'inout';
 "IN"              return 'in';
 "OUT"             return 'out';
@@ -27,6 +29,7 @@ VIEWED            return 'viewed';
 \'[^\']*\'        return 'string';
 <<EOF>>                 return 'EOF';
 [a-zA-Z_][A-Za-z0-9_]*  return 'variable';
+[0-9]+                  return 'number';
 ";"                     return 'SEMICOLON'
 "..."                   return 'dot3';
 /lex
@@ -148,6 +151,38 @@ itemDeclare
     }
   ;
 
+constantAssign
+  : variable EQUAL variable
+    {
+      var key = $1;
+      var val = $3;
+      $$ = {}
+      $$[key] = val;
+      
+    }
+  | variable EQUAL number
+    {
+      var key = $1;
+      var val = $3;
+      $$ = {};
+      $$[key]= val;
+    }
+  ;
+
+constantAssigns
+  : constantAssigns COMMA constantAssign
+    {
+      for(var key in $3){
+        var val = $3[key];
+        $$[key] =val;
+      }
+    }
+  | constantAssign
+    {
+      $$ = $1;
+    }
+  ;
+
 declare
   : procedureName arg SARROW COMMA distDefine statementComment
     {
@@ -160,6 +195,10 @@ declare
   | viewed dist itemDeclares statementComment
     {
       $$ = $3.slice();
+    }
+  | constant constantAssigns statementComment
+    {
+      $$ = $2;
     }
   ;
 
