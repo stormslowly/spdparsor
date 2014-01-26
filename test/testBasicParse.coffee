@@ -83,16 +83,15 @@ describe 'spd file parsor',->
       VIEWED FAR nw_element nw_elem_t
                   COMMENT '#function=viewed__nw_element';
       VIEWED FAR  system_type                 system_type_t,
-                    application_id              appl_id_t,
-                    hardware_release            hardware_release_t,
-                    mechanics_type              mech_type_t,
-                    gsmp_switch_name            gsmp_switch_name_t,
-                    cas_pcm_amount              cas_pcm_amount_t,
-                    com_pcm_amount              com_pcm_amount_t,
-                    edisk_linear_address        short_pointer_t,
-                    size_of_wdisk_dmc_buffer    dword,
-                    size_of_wdisk_directory     byte,
                     wdisk_read_after_write      boolean;");
+    expect(x).to.deep.equal([{
+      'nw_element':'nw_elem_t'
+      },
+      {
+        'wdisk_read_after_write':'system_type_t'
+        }])
+    console.log x;
+
 
   it 'should support CONSTANT define',->
     p = spd.parse("CONSTANT
