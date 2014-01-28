@@ -136,18 +136,22 @@ distDefine
 itemDeclares
   : itemDeclares COMMA itemDeclare
     {
-      $$.push($3);
+      for(var key in $3){
+        var val = $3[key];
+        $$[key] =val;
+      }
     }
   | itemDeclare
     {
-      $$ = [$1];
+      $$ = $1;
     }
   ;
 
 itemDeclare
   : variable variable
     {
-      $$ = {name:$1,return:$2};
+      $$ = {};
+      $$[$1] = $2;
     }
   ;
 
@@ -158,7 +162,7 @@ constantAssign
       var val = $3;
       $$ = {}
       $$[key] = val;
-      
+
     }
   | variable EQUAL number
     {
@@ -194,7 +198,7 @@ declare
     }
   | viewed dist itemDeclares statementComment
     {
-      $$ = $3.slice();
+      $$ = $3;
     }
   | constant constantAssigns statementComment
     {

@@ -88,10 +88,9 @@ describe 'spd file parsor',->
       'nw_element':'nw_elem_t'
       },
       {
-        'wdisk_read_after_write':'system_type_t'
+        'system_type':'system_type_t',
+        'wdisk_read_after_write':'boolean'
         }])
-    console.log x;
-
 
   it 'should support CONSTANT define',->
     p = spd.parse("CONSTANT
