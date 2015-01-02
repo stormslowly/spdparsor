@@ -14,6 +14,10 @@ SYNC|ASYNC        return 'serverType';
 "CONSTANT"        return 'constant';
 "LIBRARY"         return 'lib';
 "ENDLIBRARY"      return 'endLib';
+"TYPE"                  return 'TYPE';
+"ENDTYPE"               return 'ENDTYPE';
+"REPRESENTATION"        return  'REPRE';
+"POINTER"               return 'POINTER';
 ","               return 'COMMA';
 "("               return 'LBRACE';
 ")"               return 'RBRACE';
@@ -23,7 +27,7 @@ SYNC|ASYNC        return 'serverType';
 "IN/OUT"          return 'inout';
 "IN"              return 'in';
 "OUT"             return 'out';
-FAR|NEAR          return 'dist';
+FAR|far|NEAR          return 'dist';
 VIEWED            return 'viewed';
 "COMMENT"         return 'comment';
 \'[^\']*\'        return 'string';
@@ -32,6 +36,7 @@ VIEWED            return 'viewed';
 [0-9]+                  return 'number';
 ";"                     return 'SEMICOLON'
 "..."                   return 'dot3';
+
 /lex
 
 %right declares
@@ -40,6 +45,23 @@ VIEWED            return 'viewed';
 %start expressions
 
 %% /* language grammar */
+
+typdefStart
+  : TYPE variable
+  ;
+
+typdefEnd
+  : ENDTYPE variable statementComment
+  ;
+
+typdefLine
+  : REPRE  'POINTER' dist LBRACE variable RBRACE SEMICOLON
+  ;
+
+typdefs
+  : typdefStart  typdefLine  typdefEnd
+  ;
+
 
 expressions
   :libdef declares endlibdef EOF
@@ -54,6 +76,7 @@ expressions
     {
       return $1;
     }
+  | declares expressions 
   ;
 
 parameter
@@ -204,6 +227,7 @@ declare
     {
       $$ = $2;
     }
+  | typdefs
   ;
 
 libdef
@@ -213,3 +237,5 @@ libdef
 endlibdef
   : endLib variable statementComment
   ;
+
+

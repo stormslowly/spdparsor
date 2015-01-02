@@ -1,1 +1,1 @@
---compilers coffee:coffee-script -R list
+--compilers coffee:coffee-script/register -R spec
