@@ -1,41 +1,51 @@
-/** spd file parse jison
- *
+/*
+ * spd file parse jison
  */
+
 %lex
 
 %%
 
-\s+       /* skip white space  */
-'/*'[\s\S]*?'*/'        /* skip comment */;
-"SERVICES"        return 'startService';
-SYNC|ASYNC        return 'serverType';
-
-"PROCEDURE"       return 'PROCEDURE';
-"CONSTANT"        return 'constant';
-"LIBRARY"         return 'lib';
-"ENDLIBRARY"      return 'endLib';
-"TYPE"                  return 'TYPE';
-"ENDTYPE"               return 'ENDTYPE';
-"REPRESENTATION"        return  'REPRE';
-"POINTER"               return 'POINTER';
-","               return 'COMMA';
-"("               return 'LBRACE';
-")"               return 'RBRACE';
-"->"              return 'SARROW';
-"=>"|"<="         return 'DARROW';
-"="               return 'EQUAL';
-"IN/OUT"          return 'inout';
-"IN"              return 'in';
-"OUT"             return 'out';
-FAR|far|NEAR          return 'dist';
-VIEWED            return 'viewed';
-"COMMENT"         return 'comment';
-\'[^\']*\'        return 'string';
-<<EOF>>                 return 'EOF';
-[a-zA-Z_][A-Za-z0-9_]*  return 'variable';
-[0-9]+                  return 'number';
-";"                     return 'SEMICOLON'
-"..."                   return 'dot3';
+\s+                                     /* skip white space  */
+'/*'[\s\S]*?'*/'                        /* skip comment */;
+"SERVICES"                              return 'startService';
+SYNC|ASYNC                              return 'serverType';
+"PROCEDURE"                             return 'PROCEDURE';
+"CONSTANT"                              return 'constant';
+"LIBRARY"                               return 'lib';
+"ENDLIBRARY"                            return 'endLib';
+"TYPE"                                  return 'TYPE';
+"ENDTYPE"                               return 'ENDTYPE';
+"OPERATORS"                             return 'OPERATORS';
+"UNION"                                 return 'UNION';
+"ENDUNION"                              return 'UNIONEND';
+"REPRESENTATION"                        return  'REPRE';
+"POINTER"                               return 'POINTER';
+"ARRAY"|"array"                         return 'ARRAY';
+"STRUCT"                                return 'STRUCT';
+"ENDSTRUCT"                             return 'STRUCTEND';
+"ENUM"                                  return 'ENUM';
+"ENDENUM"                               return 'ENUMEND';
+OF|of                                   return 'OF';
+","                                     return 'COMMA';
+"("                                     return 'LBRACE';
+")"                                     return 'RBRACE';
+"->"                                    return 'SARROW';
+"=>"|"<="                               return 'DARROW';
+"="                                     return 'EQUAL';
+"IN/OUT"                                return 'inout';
+"IN"                                    return 'in';
+"OUT"                                   return 'out';
+FAR|far|NEAR|MACRO                      return 'dist';
+VIEWED                                  return 'viewed';
+"COMMENT"                               return 'comment';
+\'[^\']*\'                              return 'string';
+<<EOF>>                                 return 'EOF';
+\b[0-9]+\b                              return 'number';
+'0'[xX][a-fA-F0-9]+|'0b'[01]+           return 'xnumber';
+[a-zA-Z_][A-Za-z0-9_]*                  return 'variable';
+";"                                     return 'SEMICOLON'
+"..."                                   return 'dot3';
 
 /lex
 
@@ -46,6 +56,39 @@ VIEWED            return 'viewed';
 
 %% /* language grammar */
 
+enumlines
+  : variable
+  | variable COMMA enumlines
+  ;
+
+enumdef
+  : ENUM enumlines ENUMEND
+  ;
+
+structline
+  :variable variable statementComment
+  |variable ARRAY LBRACE number RBRACE OF variable statementComment
+  |variable ARRAY LBRACE variable RBRACE OF variable statementComment
+  |variable ARRAY LBRACE variable RBRACE OF structure statementComment
+  |variable ARRAY LBRACE number RBRACE OF structure statementComment
+  |variable union statementComment
+  |variable structure statementComment
+  |variable POINTER dist LBRACE variable RBRACE statementComment
+  ;
+
+structlines
+  : structline
+  | structlines structline
+  ;
+
+union
+  : UNION structlines UNIONEND
+  ;
+
+structure
+  :STRUCT structlines STRUCTEND
+  ;
+
 typdefStart
   : TYPE variable
   ;
@@ -55,11 +98,21 @@ typdefEnd
   ;
 
 typdefLine
-  : REPRE  'POINTER' dist LBRACE variable RBRACE SEMICOLON
+  : REPRE 'POINTER' dist LBRACE variable RBRACE statementComment
+  | REPRE 'POINTER' LBRACE variable RBRACE statementComment
+  | REPRE ARRAY LBRACE number RBRACE OF variable statementComment
+  | REPRE ARRAY LBRACE variable RBRACE OF variable statementComment
+  | REPRE ARRAY LBRACE variable RBRACE OF structure  statementComment
+  | REPRE structure statementComment
+  | REPRE variable statementComment
+  | REPRE enumdef statementComment
+  | REPRE union statementComment
+  | constant constantAssigns statementComment typdefLine
   ;
 
 typdefs
   : typdefStart  typdefLine  typdefEnd
+  | typdefStart  typdefLine OPERATORS declares typdefEnd
   ;
 
 
@@ -76,7 +129,7 @@ expressions
     {
       return $1;
     }
-  | declares expressions 
+  | declares expressions
   ;
 
 parameter
@@ -179,15 +232,15 @@ itemDeclare
   ;
 
 constantAssign
-  : variable EQUAL variable
+
+  : variable EQUAL number
     {
       var key = $1;
       var val = $3;
-      $$ = {}
-      $$[key] = val;
-
+      $$ = {};
+      $$[key]= val;
     }
-  | variable EQUAL number
+  |variable EQUAL xnumber
     {
       var key = $1;
       var val = $3;
@@ -197,7 +250,8 @@ constantAssign
   ;
 
 constantAssigns
-  : constantAssigns COMMA constantAssign
+
+  : constantAssigns statementComment constantAssign
     {
       for(var key in $3){
         var val = $3[key];
