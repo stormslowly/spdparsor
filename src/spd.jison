@@ -233,7 +233,15 @@ itemDeclare
 
 constantAssign
 
-  : variable EQUAL number
+  : variable EQUAL variable
+    {
+      var key = $1;
+      var val = $3;
+      $$ = {}
+      $$[key] = val;
+
+    }
+  | variable EQUAL number
     {
       var key = $1;
       var val = $3;

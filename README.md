@@ -1,4 +1,6 @@
 spdparsor
 =========
-别看了 个人娱乐项目
-a spd parsor
+
+## a spd parsor
+
+translate TNSDL procedure declares to JSON object

@@ -94,7 +94,7 @@ describe 'spd file parsor',->
 
   it 'should support CONSTANT define',->
     p = spd.parse("CONSTANT
-        asylib_defined = test,
+        asylib_defined = test;
         nextlib       = 3433;");
 
   it 'should support IN can ommitted in cdprtagx.spd',->

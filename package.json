@@ -4,7 +4,6 @@
   "description": "a spd parser",
   "main": "index.js",
   "directories": {
-    "example": "example",
     "test": "test"
   },
   "scripts": {
@@ -13,6 +12,7 @@
   "author": "supershelly",
   "license": "MIT",
   "dependencies": {
+    "jison": "0.4.15",
     "chai": "~1.8.1"
   }
 }
